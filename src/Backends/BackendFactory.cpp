@@ -15,6 +15,7 @@
 #include "FFS_MD_CPUBackend.h"
 #include "MinBackend.h"
 #include "FIREBackend.h"
+#include "FEMBackend.h"
 #ifndef NOCUDA
 #include "../CUDA/Backends/MD_CUDABackend.h"
 #ifndef CUDA_DOUBLE_PRECISION
@@ -122,6 +123,14 @@ std::shared_ptr<SimBackend> BackendFactory::make_backend(input_file &inp) {
 	else if(sim_type == "min") {
 			if(backend_opt == "CPU") {
 				new_backend = new MinBackend();
+			}
+			else {
+				throw oxDNAException("Backend '%s' not supported with sim_type = %s", backend_opt.c_str(), sim_type.c_str());
+			}
+	}
+	else if(sim_type == "FEM") {
+			if(backend_opt == "CPU") {
+				new_backend = new FEMBackend();
 			}
 			else {
 				throw oxDNAException("Backend '%s' not supported with sim_type = %s", backend_opt.c_str(), sim_type.c_str());

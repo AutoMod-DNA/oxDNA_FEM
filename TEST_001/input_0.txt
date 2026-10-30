@@ -1,0 +1,42 @@
+
+backend = CPU
+steps = 1
+
+sim_type = FEM
+
+alpha = 1e-11
+alpha_step = 0.0
+n_iter_in = 1e2
+
+max_backbone_force = 0.5
+max_backbone_force_far = 0.04
+
+dt = 0.001
+verlet_skin = 0.15
+
+T = 303K
+
+interaction_type = DNA2
+max_backbone_force = 5
+
+seed = 0
+
+salt_concentration = 0.5
+
+topology = test_001.top
+conf_file = test_001.dat
+
+trajectory_file = trajectory_0.dat
+print_conf_interval = 10
+trajectory_print_momenta = false
+
+energy_file = energy_0.dat
+print_energy_every = 10
+no_stdout_energy = false
+time_scale = linear
+
+restart_step_counter = 1
+refresh_vel = 1
+
+lastconf_file = start_1.conf
+

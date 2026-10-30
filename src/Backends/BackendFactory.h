@@ -19,7 +19,7 @@
  * @verbatim
 backend = CPU|CUDA (simulation backend. Defaults to CPU)
 [backend_precision = float|double|mixed (Precision at which calculateions are carried out. The mixed precision is only available on CUDA. Defaults to double.)]
-[sim_type = MD|MC|VMMC|FFS_MD (Type of the simulation. Supported types are Molecular Dynamics, Monte Carlo, Virtual Move Monte Carlo and Forward Flux Sampling. The first and last ones are also available on CUDA. Defaults to MD.)]
+[sim_type = MD|MC|VMMC|FFS_MD|FEM (Type of the simulation. Supported types are Molecular Dynamics, Monte Carlo, Virtual Move Monte Carlo, Forward Flux Sampling and Finite Element Method. The first and second last ones are also available on CUDA. Defaults to MD.)]
 @endverbatim
  */
 class BackendFactory {

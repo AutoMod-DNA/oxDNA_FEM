@@ -23,6 +23,7 @@ void BaseList::get_settings(input_file &inp) {
 	else if(strncmp("FFS_MD", sim_type, 512) == 0) _is_MC = false;
 	else if(strncmp("min", sim_type, 512) == 0) _is_MC = false;
 	else if(strncmp("FIRE", sim_type, 512) == 0) _is_MC = false;
+	else if(strncmp("FEM", sim_type, 512) == 0) _is_MC = false;
 	else throw oxDNAException("BaseList does not know how to handle a '%s' sim_type\n", sim_type);
 }
 

@@ -72,6 +72,10 @@ public:
 		return LR_vector(x * S, y * S, z * S);
 	}
 
+	inline LR_vector operator^(number P) {
+		return LR_vector(std::pow(x, P), std::pow(y, P), std::pow(z, P));
+	}
+
 	inline void operator+=(const LR_vector& V2) {
 		x += V2.x;
 		y += V2.y;

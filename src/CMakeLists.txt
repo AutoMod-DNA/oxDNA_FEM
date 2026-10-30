@@ -92,6 +92,8 @@ SET(backends_SOURCES
 	Backends/FIREBackend.cpp
 	Backends/FIREBackend.h
 	Backends/FFS_MD_CPUBackend.cpp
+	Backends/FEMBackend.cpp
+	Backends/FEMBackend.h
 	Backends/Thermostats/SRDThermostat.cpp
 	Backends/Thermostats/DPDThermostat.cpp
 	Backends/Thermostats/ThermostatFactory.cpp
