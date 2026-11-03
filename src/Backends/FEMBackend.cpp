@@ -55,7 +55,7 @@ LR_vector FEMBackend::get_descriptor_vector(BaseParticle *p, BaseParticle *q, in
 	case 5:		// BASE - BACK
 		descriptor = (LR_vector) ((p->pos + p->int_centers[DNANucleotide::BASE]) - (q->pos + q->int_centers[DNANucleotide::BACK]));
 		break;
-	default:
+	// default:
 		// error message here
 	}
 	return descriptor;
@@ -80,7 +80,7 @@ double FEMBackend::get_descriptor_scalar(BaseParticle *p, BaseParticle *q, int N
 		dir_norm = get_descriptor_vector(p, q, 2);
 		dir_norm = dir_norm / dir_norm.module();
 		break;
-	case 2:
+	// case 2:
 		// other interactions here as needed
 	}
 
@@ -125,7 +125,7 @@ double FEMBackend::get_descriptor_scalar(BaseParticle *p, BaseParticle *q, int N
 	case 19:	// COS PHI 4
 		break;
 
-	default:
+	// default:
 		// error message here
 	}
 	return descriptor;
@@ -214,7 +214,7 @@ double FEMBackend::ddF1(double d, double RLOW, double RHIGH, double EPS, double 
 	}
 	else if (d > RCLOW && d < RLOW)
 	{
-		D = 2*EPS*BLOW
+		D = 2*EPS*BLOW;
 	}
 	else if (d > RHIGH && d < RCHIGH)
 	{
@@ -622,7 +622,8 @@ void FEMBackend::get_T1_G1(BaseParticle *p, BaseParticle *q, Eigen::VectorXd *G,
 	double dx, sign;
 
 	r_back.normalize();
-	Eigen::Vector3d r {{r_back.x, r_back.y, r_back.z}};
+	Eigen::Vector3d r;
+	r << r_back.x, r_back.y, r_back.z;
 
 	if (which == 1)
 	{
@@ -653,7 +654,8 @@ void FEMBackend::get_T2_G1(BaseParticle *p, BaseParticle *q, Eigen::VectorXd *G,
 	Eigen::template Matrix<double, 3, 4, 0, 3, 4> Q;
 
 	r_hb.normalize();
-	Eigen::Vector3d r {{r_hb.x, r_hb.y, r_hb.z}};
+	Eigen::Vector3d r;
+	r << r_hb.x, r_hb.y, r_hb.z;
 
 	double sign, dx;
 	if (which == 1)
@@ -744,7 +746,7 @@ void FEMBackend::get_T2_G3(BaseParticle *p, BaseParticle *q, Eigen::VectorXd *G,
 
 		(*G).block(0, 0, 3, 1) = sign * (1/std::sqrt(1 - std::pow(b_bar.transpose()*r_hb_norm, 2))) * (1/d) * (b_bar - (b_bar.transpose()*r_hb_norm)*r_hb_norm);
 		(*G).block(3, 0, 4, 1) = 2*(r_hb_norm.transpose() * Q).transpose() + 2*dx*(1/d)*(b_bar.transpose() * Q).transpose();
-		(*G).block(3, 0, 4, 1) -= (1/std::pow(d, 3))* b_bar.transpose()*r_hb * 2*dx*(r_hb.transpose() * Q).transpose();
+		(*G).block(3, 0, 4, 1) -= (1/std::pow(d, 3)) * (double)(b_bar.transpose()*r_hb).value() * 2*dx*(r_hb.transpose() * Q).transpose();
 		(*G).block(3, 0, 4, 1) *= sign / std::sqrt(1 - std::pow(b_bar.transpose()*r_hb_norm, 2));
 	}
 	else
@@ -756,7 +758,7 @@ void FEMBackend::get_T2_G3(BaseParticle *p, BaseParticle *q, Eigen::VectorXd *G,
 
 		(*G).block(0, 0, 3, 1) = sign * (-1/std::sqrt(1 - std::pow(b_tilde.transpose()*r_hb_norm, 2))) * (1/d) * (b_tilde - (b_tilde.transpose()*r_hb_norm)*r_hb_norm);
 		(*G).block(3, 0, 4, 1) = 2*dx*(1/d)*(b_tilde.transpose() * Q).transpose();
-		(*G).block(3, 0, 4, 1) -= (1/std::pow(d, 3))* b_tilde.transpose()*r_hb * 2*dx*(r_hb.transpose() * Q).transpose();
+		(*G).block(3, 0, 4, 1) -= (1/std::pow(d, 3)) * (double)(b_tilde.transpose()*r_hb).value() * 2*dx*(r_hb.transpose() * Q).transpose();
 		(*G).block(3, 0, 4, 1) *= sign*(-1) / std::sqrt(1 - std::pow(b_tilde.transpose()*r_hb_norm, 2));
 	}
 	// which 2 is the same as which 1 for theta 3 but with reversed signs
@@ -788,7 +790,7 @@ void FEMBackend::get_T2_G4(BaseParticle *p, BaseParticle *q, Eigen::VectorXd *G,
 
 		(*G).block(0, 0, 3, 1) = sign * ((-1)/std::sqrt(1 - std::pow(b_tilde.transpose()*r_hb_norm, 2))) * (1/d) * (b_tilde - (b_tilde.transpose()*r_hb_norm)*r_hb_norm);
 		(*G).block(3, 0, 4, 1) = 2*dx*(1/d)*(b_tilde.transpose() * Q).transpose();
-		(*G).block(3, 0, 4, 1) -= (1/std::pow(d, 3))* b_tilde.transpose()*r_hb * 2*dx*(r_hb.transpose() * Q).transpose();
+		(*G).block(3, 0, 4, 1) -= (1/std::pow(d, 3)) * (double)(b_tilde.transpose()*r_hb).value() * 2*dx*(r_hb.transpose() * Q).transpose();
 		(*G).block(3, 0, 4, 1) *= sign*(-1) / std::sqrt(1 - std::pow(b_tilde.transpose()*r_hb_norm, 2));
 	}
 	else
@@ -800,7 +802,7 @@ void FEMBackend::get_T2_G4(BaseParticle *p, BaseParticle *q, Eigen::VectorXd *G,
 
 		(*G).block(0, 0, 3, 1) = sign * (1/std::sqrt(1 - std::pow(b_bar.transpose()*r_hb_norm, 2))) * (1/d) * (b_bar - (b_bar.transpose()*r_hb_norm)*r_hb_norm);
 		(*G).block(3, 0, 4, 1) = 2*(r_hb_norm.transpose() * Q).transpose() + 2*dx*(1/d)*(b_bar.transpose() * Q).transpose();
-		(*G).block(3, 0, 4, 1) -= (1/std::pow(d, 3))* b_bar.transpose()*r_hb * 2*dx*(r_hb.transpose() * Q).transpose();
+		(*G).block(3, 0, 4, 1) -= (1/std::pow(d, 3)) * (double)(b_bar.transpose()*r_hb).value() * 2*dx*(r_hb.transpose() * Q).transpose();
 		(*G).block(3, 0, 4, 1) *= sign / std::sqrt(1 - std::pow(b_bar.transpose()*r_hb_norm, 2));
 	}
 	// which 2 is the same as which 1 for theta 2 but with reversed signs
@@ -865,7 +867,7 @@ void FEMBackend::get_T2_G6(BaseParticle *p, BaseParticle *q, Eigen::VectorXd *G,
 
 		(*G).block(0, 0, 3, 1) = sign * (1/std::sqrt(1 - std::pow(n_bar.transpose()*r_hb_norm, 2))) * (1/d) * (n_bar - (n_bar.transpose()*r_hb_norm)*r_hb_norm);
 		(*G).block(3, 0, 4, 1) = 2*(r_hb_norm.transpose() * Q_n).transpose() + 2*dx*(1/d)*(n_bar.transpose() * Q_r).transpose();
-		(*G).block(3, 0, 4, 1) -= (1/std::pow(d, 3))* n_bar.transpose()*r_hb * 2*dx*(r_hb.transpose() * Q_r).transpose();
+		(*G).block(3, 0, 4, 1) -= (1/std::pow(d, 3)) * (double)(n_bar.transpose()*r_hb).value() * 2*dx*(r_hb.transpose() * Q_r).transpose();
 		(*G).block(3, 0, 4, 1) *= sign / std::sqrt(1 - std::pow(n_bar.transpose()*r_hb_norm, 2));
 	}
 	else
@@ -878,7 +880,7 @@ void FEMBackend::get_T2_G6(BaseParticle *p, BaseParticle *q, Eigen::VectorXd *G,
 
 		(*G).block(0, 0, 3, 1) = sign * (-1/std::sqrt(1 - std::pow(n_tilde.transpose()*r_hb_norm, 2))) * (1/d) * (n_tilde - (n_tilde.transpose()*r_hb_norm)*r_hb_norm);
 		(*G).block(3, 0, 4, 1) = 2*dx*(1/d)*(n_tilde.transpose() * Q_r).transpose();
-		(*G).block(3, 0, 4, 1) -= (1/std::pow(d, 3))* n_tilde.transpose()*r_hb * 2*dx*(r_hb.transpose() * Q_r).transpose();
+		(*G).block(3, 0, 4, 1) -= (1/std::pow(d, 3)) * (double)(n_tilde.transpose()*r_hb).value() * 2*dx*(r_hb.transpose() * Q_r).transpose();
 		(*G).block(3, 0, 4, 1) *= sign*(-1) / std::sqrt(1 - std::pow(n_tilde.transpose()*r_hb_norm, 2));
 	}
 	// which 2 is the same as which 1 for theta 8 but with reversed signs
@@ -886,7 +888,7 @@ void FEMBackend::get_T2_G6(BaseParticle *p, BaseParticle *q, Eigen::VectorXd *G,
 
 void FEMBackend::get_T2_G7(BaseParticle *p, BaseParticle *q, Eigen::VectorXd *G, int which)
 {
-	// T2: TERM 2: Hydrogen bonding
+        // T2: TERM 2: Hydrogen bonding
 	// G7: GRADIENT OF GEOMETRIC DESCRIPTOR 7: Angle theta 8
 	LR_vector r_hb_lr = get_descriptor_vector(p, q, 2);
 
@@ -911,7 +913,7 @@ void FEMBackend::get_T2_G7(BaseParticle *p, BaseParticle *q, Eigen::VectorXd *G,
 
 		(*G).block(0, 0, 3, 1) = sign * ((-1)/std::sqrt(1 - std::pow(n_tilde.transpose()*r_hb_norm, 2))) * (1/d) * (n_tilde - (n_tilde.transpose()*r_hb_norm)*r_hb_norm);
 		(*G).block(3, 0, 4, 1) = 2*dx*(1/d)*(n_tilde.transpose() * Q_r).transpose();
-		(*G).block(3, 0, 4, 1) -= (1/std::pow(d, 3))* n_tilde.transpose()*r_hb * 2*dx*(r_hb.transpose() * Q_r).transpose();
+		(*G).block(3, 0, 4, 1) -= (1/std::pow(d, 3)) * (double)(n_tilde.transpose()*r_hb).value() * 2*dx*(r_hb.transpose() * Q_r).transpose();
 		(*G).block(3, 0, 4, 1) *= sign*(-1) / std::sqrt(1 - std::pow(n_tilde.transpose()*r_hb_norm, 2));
 	}
 	else
@@ -925,44 +927,348 @@ void FEMBackend::get_T2_G7(BaseParticle *p, BaseParticle *q, Eigen::VectorXd *G,
 		(*G).block(0, 0, 3, 1) = sign * (1/std::sqrt(1 - std::pow(n_bar.transpose()*r_hb_norm, 2))) * (1/d) * (n_bar - (n_bar.transpose()*r_hb_norm)*r_hb_norm);
 
 		(*G).block(3, 0, 4, 1) = 2*(r_hb_norm.transpose() * Q_n).transpose() + 2*dx*(1/d)*(n_bar.transpose() * Q_r).transpose();
-		(*G).block(3, 0, 4, 1) -= (1/std::pow(d, 3))* n_bar.transpose()*r_hb * 2*dx*(r_hb.transpose() * Q_r).transpose();
+		(*G).block(3, 0, 4, 1) -= (1/std::pow(d, 3)) * (double)(n_bar.transpose()*r_hb).value() * 2*dx*(r_hb.transpose() * Q_r).transpose();
 		(*G).block(3, 0, 4, 1) *= sign / std::sqrt(1 - std::pow(n_bar.transpose()*r_hb_norm, 2));
 	}
 	// which 2 is the same as which 1 for theta 7 but with reversed signs
 }
 
+void FEMBackend::get_HG_THETA1(BaseParticle *p, BaseParticle *q, Eigen::MatrixXd *K, int which)
+{
+        Eigen::Vector3d b_bar, b_tilde, b_bar_s, b_tilde_s;
+        Eigen::Vector4d quat;
+        Eigen::template Matrix<double, 3, 4, 0, 3, 4> Q_bar, Q_tilde;
+        Eigen::Matrix3d A_bar, A_tilde;
+
+        b_bar << p->orientationT.v1.x, p->orientationT.v1.y, p->orientationT.v1.z;
+        b_tilde << q->orientationT.v1.x, q->orientationT.v1.y, q->orientationT.v1.z;
+
+        A_bar << p->orientation.v1.x, p->orientation.v1.y, p->orientation.v1.z;
+        A_bar << p->orientation.v2.x, p->orientation.v2.y, p->orientation.v2.z;
+        A_bar << p->orientation.v3.x, p->orientation.v3.y, p->orientation.v3.z;
+
+        A_tilde << q->orientation.v1.x, q->orientation.v1.y, q->orientation.v1.z;
+        A_tilde << q->orientation.v2.x, q->orientation.v2.y, q->orientation.v2.z;
+        A_tilde << q->orientation.v3.x, q->orientation.v3.y, q->orientation.v3.y;
+
+        b_bar_s = A_bar.transpose() * b_bar;
+        b_tilde_s = A_tilde.transpose() * b_tilde;
+
+        get_quaternion(p, quat);
+        Q_bar << quat(0), quat(1), -quat(2), -quat(3), quat(3), quat(2), quat(1), quat(0), -quat(2), quat(3), -quat(0), quat(1);
+        Q_bar = 2 * Q_bar;
+        get_quaternion(q, quat);
+        Q_tilde << quat(0), quat(1), -quat(2), -quat(3), quat(3), quat(2), quat(1), quat(0), -quat(2), quat(3), -quat(0), quat(1);
+        Q_tilde = 2 * Q_tilde;
+
+        switch ( which )
+        {
+        case 1:   // partial derivative p, nabla p
+                (*K).block(3, 3, 4, 4) = Q_bar.transpose() * A_bar * A_tilde.transpose() * b_tilde * b_tilde.transpose() * Q_bar;
+                (*K).block(3, 3, 4, 4) *= (-1)*b_bar_s.transpose()*b_tilde_s / std::sqrt(std::pow(1 - std::pow(b_bar_s.transpose()*b_tilde_s, 2), 3));
+	        break;
+        case 2:  // partial derivative p, nabla q
+                (*K).block(3, 3, 4, 4) = Q_bar.transpose() * A_bar * A_tilde.transpose() * b_tilde * b_bar.transpose() * Q_tilde;
+                (*K).block(3, 3, 4, 4) *= (-1)*b_tilde_s.transpose()*b_bar_s / std::sqrt(std::pow(1 - std::pow(b_tilde_s.transpose()*b_bar_s, 2), 3));
+                (*K).block(3, 3, 4, 4) += ((-1) / std::sqrt(1 - std::pow(b_tilde_s.transpose()*b_bar_s, 2))) * Q_bar.transpose()*Q_tilde;
+	        break;
+        case 3:  // partial derivative q, nabla p
+                (*K).block(3, 3, 4, 4) = Q_tilde.transpose() * b_bar.transpose() * A_bar * A_tilde.transpose() * b_tilde.transpose() * Q_bar;
+                (*K).block(3, 3, 4, 4) *= (-1)*b_bar_s.transpose()*b_tilde_s / std::sqrt(std::pow(1 - std::pow(b_bar_s.transpose()*b_tilde_s, 2), 3));
+                (*K).block(3, 3, 4, 4) += ((-1) / std::sqrt(1 - std::pow(b_bar_s.transpose()*b_tilde_s, 2))) * Q_tilde.transpose()*Q_bar;
+	        break;
+        case 4:  // partial derivative q, nabla q
+                (*K).block(3, 3, 4, 4) = Q_tilde.transpose() * b_bar.transpose() * A_bar * A_tilde.transpose() * b_bar.transpose() * Q_tilde;
+                (*K).block(3, 3, 4, 4) *=  (-1)*b_tilde_s.transpose()*b_bar_s / std::sqrt(std::pow(1 - std::pow(b_tilde_s.transpose()*b_bar_s, 2), 3));
+	        break;
+        }
+        
+        (*K).block(0, 0, 3, 3) << 0, 0, 0, 0, 0, 0, 0, 0, 0;
+        (*K).block(0, 3, 3, 4) << 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0;
+        (*K).block(3, 0, 4, 3) << 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0;
+}
+
+void FEMBackend::get_HG_THETA2(BaseParticle *p, BaseParticle *q, Eigen::MatrixXd *K, int which)
+{
+        Eigen::Vector3d b_bar, b_tilde, r_hat;
+        Eigen::Vector4d quat;
+        Eigen::template Matrix<double, 3, 4, 0, 3, 4> Q_bar, Q_tilde, Q_r;
+        Eigen::Matrix3d I;
+        LRVector r;
+        double d, dx;
+        
+        r = get_descriptor_vector(p, q, 2);
+        r_hat << r.x, r.y, r.z;
+        r_hat = r_hat / r.module();
+        d = r.module();
+        dx = ((LR_vector) (p->int_centers[DNANucleotide::BASE])).module();
+        
+        I.set_identity();
+
+        b_bar << p->orientationT.v1.x, p->orientationT.v1.y, p->orientationT.v1.z;
+        b_tilde << q->orientationT.v1.x, q->orientationT.v1.y, q->orientationT.v1.z;
+
+        get_quaternion(p, quat);
+        Q_bar << quat(0), quat(1), -quat(2), -quat(3), quat(3), quat(2), quat(1), quat(0), -quat(2), quat(3), -quat(0), quat(1);
+        Q_bar = 2*Q_bar;
+        Q_r << quat(0), quat(1), -quat(2), -quat(3), quat(3), quat(2), quat(1), quat(0), -quat(2), quat(3), -quat(0), quat(1);
+        Q_r = 2*dx*Q_r;
+        get_quaternion(q, quat);
+        Q_tilde << quat(0), quat(1), -quat(2), -quat(3), quat(3), quat(2), quat(1), quat(0), -quat(2), quat(3), -quat(0), quat(1);
+        Q_tilde = 2*Q_tilde;
+        
+        double s1, s2, s3, s4 dot1, dot2;
+        s1 = (-1) / std::sqrt(1 - std::pow(b_bar.transpose()*r_hat, 2));
+        s3 = 1 / std::sqrt(1 - std::pow(b_tilde.transpose()*r_hat, 2));
+        s2 = b_bar.transpose()*r_hat / std::sqrt(std::pow(1 - std::pow(b_bar.transpose()*r_hat, 2), 3));
+        s4 = b_tilde.transpose()*r_hat / std::sqrt(std::pow(1 - std::pow(b_tilde.transpose()*r_hat, 2), 3));
+        dot1 = (double) (b_bar.transpose()*r_hat).value();
+        dot2 = (double) (b_tilde.transpose()*r_hat).value();
+
+        switch ( which )
+        {
+        case 1:   // partial derivative p, nabla p
+                (*K).block(0, 0, 3, 3) = s1*(I*dot1 + r_hat*b_bar.transpose()) + s2*(b_bar - r_hat*dot1)*b_bar.transpose();
+                (*K).block(0, 0, 3, 3) *= (1/std::pow(d, 2)) * (I - r_hat*r_hat.transpose());
+                
+                (*K).block(0, 3, 3, 4) = (-1)*s1 * (I*Q_bar - (1/d)*b_bar*r_hat.transpose()*Q_r - (dot1/d)*Q_r);
+                (*K).block(0, 3, 3, 4) += s2 * b_bar * (r_hat.transpose()*Q_bar + (1/d)*b_bar.transpose()*Q_r - (dot1/d)*r_hat.transpose()*Q_r) ;
+                (*K).block(0, 3, 3, 4) = (1/d) * (I - r_hat*r_hat.transpose()) * (*K).block(0, 3, 3, 4);
+                
+                (*K).block(3, 0, 4, 3) = (-1)*s1 * (I - r_hat*r_hat.transpose()) + s2 * (b_bar - dot1 * r_hat) * r_hat.transpose();
+                (*K).block(3, 0, 4, 3) = (1/d)*Q_bar.transpose() * (*K).block(3, 0, 4, 3);
+                
+                (*K).block(3, 3, 4, 4) = (-1)*s1*(1/d) * (Q_r - r_hat*r_hat.transpose()*Q_r);
+                (*K).block(3, 3, 4, 4) += s2 * r_hat * (r_hat.transpose()*Q_bar + (1/d)*b_bar.transpose()*Q_r - (dot1/d)*r_hat.transpose()*Q_r);
+                (*K).block(3, 3, 4, 4) = Q_bar.transpose() * (*K).block(3, 3, 4, 4);
+	        break;
+        case 2:  // partial derivative p, nabla q
+                (*K).block(0, 0, 3, 3) = (-1)*s3*(I*dot2 + r_hat*b_tilde.transpose()) + s4*(b_tilde - r_hat*dot2)*b_tilde.transpose();
+                (*K).block(0, 0, 3, 3) = (1/std::pow(d, 2)) * (I - r_hat*r_hat.transpose()) * (*K).block(0, 0, 3, 3);
+                
+                (*K).block(0, 3, 3, 4) = s3*(Q_tilde - (1/d)*b_tilde*r_hat.transpose()*Q_r - (dot2/d)*Q_r);
+                (*K).block(0, 3, 3, 4) += s4*b_tilde*(r_hat.transpose()*Q_tilde + (1/d)*b_tilde.transpose()*Q_r - (dot2/d)*r_hat.transpose()*Q_r);
+                (*K).block(0, 3, 3, 4) = (1/d)*(I - r_hat*r_hat.transpose()) * (*K).block(0, 3, 3, 4);
+                
+                (*K).block(3, 0, 4, 3) << 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0;
+                (*K).block(3, 3, 4, 4) << 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0;
+	        break;
+        case 3:  // partial derivative q, nabla p
+                (*K).block(0, 0, 3, 3) = s1*(I*dot1 + r_hat*b_bar.transpose()) + s2*(b_bar - r_hat*dot1)*b_bar.transpose();
+                (*K).block(0, 0, 3, 3) = (-1)*(1/std::pow(d, 2)) * (I - r_hat*r_hat.transpose()) * (*K).block(0, 0, 3, 3);
+                
+                (*K).block(0, 3, 3, 4) = (-1)*s1 * (I*Q_bar - (1/d)*b_bar*r_hat.transpose()*Q_r - (dot1/d)*Q_r);
+                (*K).block(0, 3, 3, 4) += s2 * b_bar * (r_hat.transpose()*Q_bar + (1/d)*b_bar.transpose()*Q_r - (dot1/d)*r_hat.transpose()*Q_r) ;
+                (*K).block(0, 3, 3, 4) = (-1)*(1/d) * (I - r_hat*r_hat.transpose()) * (*K).block(0, 3, 3, 4);
+                
+                (*K).block(3, 0, 4, 3) << 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0;
+                (*K).block(3, 3, 4, 4) << 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0;
+	        break;
+        case 4:  // partial derivative q, nabla q
+                (*K).block(0, 0, 3, 3) = (-1)*s3*(I*dot2 + r_hat*b_tilde.transpose()) + s4*(b_tilde - r_hat*dot2)*b_tilde.transpose();
+                (*K).block(0, 0, 3, 3) = (1/std::pow(d, 2)) * (I - r_hat*r_hat.transpose()) * (*K).block(0, 0, 3, 3);
+                
+                (*K).block(0, 3, 3, 4) = s3*(Q_tilde - (1/d)*b_tilde*r_hat.transpose()*Q_r - (dot2/d)*Q_r);
+                (*K).block(0, 3, 3, 4) += s4*b_tilde*(r_hat.transpose()*Q_tilde + (1/d)*b_tilde.transpose()*Q_r - (dot2/d)*r_hat.transpose()*Q_r);
+                (*K).block(0, 3, 3, 4) = (1/d)*(I - r_hat*r_hat.transpose()) * (*K).block(0, 3, 3, 4);
+                
+                (*K).block(3, 0, 4, 3) = s3*(I - r_hat*r_hat.transpose()) + s4*(b_tilde - r_hat*dot2)*r_hat.transpose();
+                (*K).block(3, 0, 4, 3) = (1/d)*Q_tilde.transpose() * (*K).block(3, 0, 4, 3);
+                
+                (*K).block(3, 3, 4, 4) = s3*(1/d)*(Q_r - r_hat*r_hat.transpose()*Q_r) + s4*(1/d)*r_hat*(b_tilde.transpose()*Q_r - dot2*r_hat.transpose()*Q_r);
+                (*K).block(3, 3, 4, 4) = Q_tilde.transpose() * (*K).block(3, 3, 4, 4)
+	        break;
+        }
+}
+
+void FEMBackend::get_HG_THETA3(BaseParticle *p, BaseParticle *q, Eigen::MatrixXd *K, int which)
+{
+        // WRITE THIS
+}
+
+void FEMBackend::get_HG_THETA4(BaseParticle *p, BaseParticle *q, Eigen::MatrixXd *K, int which)
+{
+        // WRITE THIS
+}
+
+void FEMBackend::get_HG_THETA7(BaseParticle *p, BaseParticle *q, Eigen::MatrixXd *K, int which)
+{
+        // WRITE THIS
+}
+
+void FEMBackend::get_HG_THETA8(BaseParticle *p, BaseParticle *q, Eigen::MatrixXd *K, int which)
+{
+        // WRITE THIS
+}
+
 void FEMBackend::get_KF_local_bonded(BaseParticle *p, BaseParticle *q, Eigen::MatrixXd *K, Eigen::VectorXd *F)
 {
 	//std::cout << "Computing K, F local bonded." << std::endl;
-	Eigen::MatrixXd I(7, 7);
-	Eigen::VectorXd T1_G1_p(7), T1_G1_q(7);
+	Eigen::MatrixXd I(7, 7), HG(7, 7);
+	Eigen::VectorXd Gp(7), Gq(7);
 
 	I.setIdentity();
+	
+	// BACKBONE BONDS
+	
+	// G1: R BACK-BACK
 
-	get_T1_G1(p, q, &T1_G1_p, 1);
-	get_T1_G1(q, p, &T1_G1_q, 1);
+	get_T1_G1(p, q, &Gp, 1);
+	get_T1_G1(q, p, &Gq, 1);
 
-	(*K).block(p->index*7, p->index*7, 7, 7) += get_D21_G1(p, q) * (T1_G1_p * T1_G1_p.transpose()) + get_D11_G1(p, q) * (I - T1_G1_p * T1_G1_p.transpose());
-	(*K).block(q->index*7, p->index*7, 7, 7) += get_D21_G1(q, p) * (T1_G1_q * T1_G1_p.transpose()) + get_D11_G1(q, p) * (I - T1_G1_q * T1_G1_p.transpose());
-	(*F).block(p->index*7, 0, 7, 1) += get_D11_G1(p, q) * T1_G1_p;
+	(*K).block(p->index*7, p->index*7, 7, 7) += get_D21_G1(p, q) * (Gp * Gp.transpose()) + get_D11_G1(p, q) * (I - Gp * Gp.transpose());
+	(*K).block(q->index*7, p->index*7, 7, 7) += get_D21_G1(q, p) * (Gq * Gp.transpose()) + get_D11_G1(q, p) * (I - Gq * Gp.transpose());
+	(*F).block(p->index*7, 0, 7, 1) += get_D11_G1(p, q) * Gp;
 
-	get_T1_G1(p, q, &T1_G1_p, 2);
-	get_T1_G1(q, p, &T1_G1_q, 2);
+	get_T1_G1(p, q, &Gp, 2);
+	get_T1_G1(q, p, &Gq, 2);
 
-	(*K).block(p->index*7, q->index*7, 7, 7) += get_D21_G1(p, q) * (T1_G1_p * T1_G1_q.transpose()) + get_D11_G1(p, q) * (I - T1_G1_p * T1_G1_q.transpose());
-	(*K).block(q->index*7, q->index*7, 7, 7) += get_D21_G1(q, p) * (T1_G1_q * T1_G1_q.transpose()) + get_D11_G1(q, p) * (I - T1_G1_q * T1_G1_q.transpose());
-	(*F).block(q->index*7, 0, 7, 1) += get_D11_G1(q, p) * T1_G1_q;
+	(*K).block(p->index*7, q->index*7, 7, 7) += get_D21_G1(p, q) * (Gp * Gq.transpose()) + get_D11_G1(p, q) * (I - Gp * Gq.transpose());
+	(*K).block(q->index*7, q->index*7, 7, 7) += get_D21_G1(q, p) * (Gq * Gq.transpose()) + get_D11_G1(q, p) * (I - Gq * Gq.transpose());
+	(*F).block(q->index*7, 0, 7, 1) += get_D11_G1(q, p) * Gq;
 
-	// add stacking and excluded volume terms
+        // STACKING
+        
+        // EXCLUDED VOLUME
 }
 
 void FEMBackend::get_KF_local_nonbonded(BaseParticle *p, BaseParticle *q, Eigen::MatrixXd *K, Eigen::VectorXd *F)
 {
 	//std::cout << "Computing K, F local nonbonded." << std::endl;
+	Eigen::MatrixXd I(7, 7), HG(7, 7);
+	Eigen::VectorXd Gp(7), Gq(7);
+	
+	I.setIdentity();
+	
+	// HYDROGEN BONDS
+	
+	// G1: R BASE-BASE
+	
+	get_T2_G1(p, q, &Gp, 1);
+	get_T2_G1(p, q, &Gq, 1);
+	
+	(*K).block(p->index*7, p->index*7, 7, 7) += get_D22_G1(p, q) * (Gp * Gp.transpose()) + get_D12_G1(p, q) * (I - Gp * Gp.transpose());
+	(*K).block(q->index*7, p->index*7, 7, 7) += get_D22_G1(q, p) * (Gq * Gp.transpose()) + get_D12_G1(q, p) * (I - Gq * Gp.transpose());
+	(*F).block(p->index*7, 0, 7, 1) += get_D12_G1(p, q) * Gp;
+	
+	get_T2_G1(p, q, &Gp, 2);
+	get_T2_G1(p, q, &Gq, 2);
 
-	// WRITE THIS NEXT !!!
+	(*K).block(p->index*7, q->index*7, 7, 7) += get_D22_G1(p, q) * (Gp * Gq.transpose()) + get_D12_G1(p, q) * (I - Gp * Gq.transpose());
+	(*K).block(q->index*7, q->index*7, 7, 7) += get_D22_G1(q, p) * (Gq * Gq.transpose()) + get_D12_G1(q, p) * (I - Gq * Gq.transpose());
+	(*F).block(q->index*7, 0, 7, 1) += get_D12_G1(q, p) * Gq;
 
-	// HYDROGEN BONDING HERE
+	// G2: THETA 1
+	
+	get_T2_G2(p, q, &Gp, 1);
+	get_T2_G2(p, q, &Gq, 1);
+	
+	get_HG_THETA1(p, q, HG, 1)
+	(*K).block(p->index*7, p->index*7, 7, 7) += get_D22_G2(p, q) * (Gp * Gp.transpose()) + get_D12_G2(p, q) * HG;
+	get_HG_THETA1(p, q, HG, 3)
+	(*K).block(q->index*7, p->index*7, 7, 7) += get_D22_G2(q, p) * (Gq * Gp.transpose()) + get_D12_G2(q, p) * HG;
+	(*F).block(p->index*7, 0, 7, 1) += get_D12_G2(p, q) * Gp;
+		
+	get_T2_G2(p, q, &Gp, 2);
+	get_T2_G2(p, q, &Gq, 2);
+
+        get_HG_THETA1(p, q, HG, 2)
+	(*K).block(p->index*7, q->index*7, 7, 7) += get_D22_G2(p, q) * (Gp * Gq.transpose()) + get_D12_G2(p, q) * HG;
+	get_HG_THETA1(p, q, HG, 4)
+	(*K).block(q->index*7, q->index*7, 7, 7) += get_D22_G2(q, p) * (Gq * Gq.transpose()) + get_D12_G2(q, p) * HG;
+	(*F).block(q->index*7, 0, 7, 1) += get_D12_G2(q, p) * Gq;
+	
+	// G3: THETA 2
+	
+	get_T2_G3(p, q, &Gp, 1);
+	get_T2_G3(p, q, &Gq, 1);
+	
+	get_HG_THETA2(p, q, HG, 1)
+	(*K).block(p->index*7, p->index*7, 7, 7) += get_D22_G3(p, q) * (Gp * Gp.transpose()) + get_D12_G3(p, q) * HG;
+	get_HG_THETA2(p, q, HG, 3)
+	(*K).block(q->index*7, p->index*7, 7, 7) += get_D22_G3(q, p) * (Gq * Gp.transpose()) + get_D12_G3(q, p) * HG;
+	(*F).block(p->index*7, 0, 7, 1) += get_D12_G3(p, q) * Gp;
+			
+	get_T2_G3(p, q, &Gp, 2);
+	get_T2_G3(p, q, &Gq, 2);
+
+        get_HG_THETA2(p, q, HG, 2)
+	(*K).block(p->index*7, q->index*7, 7, 7) += get_D22_G3(p, q) * (Gp * Gq.transpose()) + get_D12_G3(p, q) * HG;
+	get_HG_THETA2(p, q, HG, 4)
+	(*K).block(q->index*7, q->index*7, 7, 7) += get_D22_G3(q, p) * (Gq * Gq.transpose()) + get_D12_G3(q, p) * HG;
+	(*F).block(q->index*7, 0, 7, 1) += get_D12_G3(q, p) * Gq;
+	
+	// G4: THETA 3
+	
+	get_T2_G4(p, q, &Gp, 1);
+	get_T2_G4(p, q, &Gq, 1);
+			
+	(*K).block(p->index*7, p->index*7, 7, 7) += get_D22_G4(p, q) * (Gp * Gp.transpose()) // + get_D12_G4(p, q) * (...);
+	(*K).block(q->index*7, p->index*7, 7, 7) += get_D22_G4(q, p) * (Gq * Gp.transpose()) // + get_D12_G4(q, p) * (...);
+	(*F).block(p->index*7, 0, 7, 1) += get_D12_G4(p, q) * Gp;
+			
+	get_T2_G4(p, q, &Gp, 2);
+	get_T2_G4(p, q, &Gq, 2);
+
+	(*K).block(p->index*7, q->index*7, 7, 7) += get_D22_G4(p, q) * (Gp * Gq.transpose()) // + get_D12_G4(p, q) * (...);
+	(*K).block(q->index*7, q->index*7, 7, 7) += get_D22_G4(q, p) * (Gq * Gq.transpose()) // + get_D12_G4(q, p) * (...);
+	(*F).block(q->index*7, 0, 7, 1) += get_D12_G4(q, p) * Gq;
+	
+	// G5: THETA 4
+	
+	get_T2_G5(p, q, &Gp, 1);
+	get_T2_G5(p, q, &Gq, 1);
+			
+	(*K).block(p->index*7, p->index*7, 7, 7) += get_D22_G5(p, q) * (Gp * Gp.transpose()) // + get_D12_G5(p, q) * (...);
+	(*K).block(q->index*7, p->index*7, 7, 7) += get_D22_G5(q, p) * (Gq * Gp.transpose()) // + get_D12_G5(q, p) * (...);
+	(*F).block(p->index*7, 0, 7, 1) += get_D12_G5(p, q) * Gp;
+			
+	get_T2_G5(p, q, &Gp, 2);
+	get_T2_G5(p, q, &Gq, 2);
+
+	(*K).block(p->index*7, q->index*7, 7, 7) += get_D22_G5(p, q) * (Gp * Gq.transpose()) // + get_D12_G5(p, q) * (...);
+	(*K).block(q->index*7, q->index*7, 7, 7) += get_D22_G5(q, p) * (Gq * Gq.transpose()) // + get_D12_G5(q, p) * (...);
+	(*F).block(q->index*7, 0, 7, 1) += get_D12_G5(q, p) * Gq;
+	
+	// G6: THETA 7
+	
+	get_T2_G6(p, q, &Gp, 1);
+	get_T2_G6(p, q, &Gq, 1);
+			
+	(*K).block(p->index*7, p->index*7, 7, 7) += get_D22_G6(p, q) * (Gp * Gp.transpose()) // + get_D12_G6(p, q) * (...);
+	(*K).block(q->index*7, p->index*7, 7, 7) += get_D22_G6(q, p) * (Gq * Gp.transpose()) // + get_D12_G6(q, p) * (...);
+	(*F).block(p->index*7, 0, 7, 1) += get_D12_G6(p, q) * Gp;
+			
+	get_T2_G6(p, q, &Gp, 2);
+	get_T2_G6(p, q, &Gq, 2);
+
+	(*K).block(p->index*7, q->index*7, 7, 7) += get_D22_G6(p, q) * (Gp * Gq.transpose()) // + get_D12_G6(p, q) * (...);
+	(*K).block(q->index*7, q->index*7, 7, 7) += get_D22_G6(q, p) * (Gq * Gq.transpose()) // + get_D12_G6(q, p) * (...);
+	(*F).block(q->index*7, 0, 7, 1) += get_D12_G6(q, p) * Gq;
+	
+	// G7: THETA 8
+		
+	get_T2_G7(p, q, &Gp, 1);
+	get_T2_G7(p, q, &Gq, 1);
+				
+	(*K).block(p->index*7, p->index*7, 7, 7) += get_D22_G7(p, q) * (Gp * Gp.transpose()) // + get_D12_G7(p, q) * (...);
+	(*K).block(q->index*7, p->index*7, 7, 7) += get_D22_G7(q, p) * (Gq * Gp.transpose()) // + get_D12_G7(q, p) * (...);
+	(*F).block(p->index*7, 0, 7, 1) += get_D12_G7(p, q) * Gp;
+				
+	get_T2_G7(p, q, &Gp, 2);
+	get_T2_G7(p, q, &Gq, 2);
+
+	(*K).block(p->index*7, q->index*7, 7, 7) += get_D22_G7(p, q) * (Gp * Gq.transpose()) // + get_D12_G7(p, q) * (...);
+	(*K).block(q->index*7, q->index*7, 7, 7) += get_D22_G7(q, p) * (Gq * Gq.transpose()) // + get_D12_G7(q, p) * (...);
+	(*F).block(q->index*7, 0, 7, 1) += get_D12_G7(q, p) * Gq;
+
+	// CROSS STACKING
+	
+	// COAXIAL STACKING
+	
+	// EXCLUDED VOLUME
+	
+	// DEBYE-HUCKEL
 }
 
 void FEMBackend::get_settings(input_file &inp)
@@ -1070,6 +1376,7 @@ void FEMBackend::sim_step() {
 
 		std::cout << "Inner loop iteration " << i << " with alpha value " << _alpha << std::endl;
 		compute_KF(K_p, F_p);
+		std::cout << K_global.block(0, 0, 14, 14) << std::endl;
 
 		F_global = _alpha * F_global;
 
